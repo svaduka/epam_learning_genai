@@ -17,7 +17,7 @@ This project is a chatbot built using LangChain and OpenAI's GPT-3 that acts as 
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.10 or higher
 - pip (Python package installer)
 
 ### Required Packages

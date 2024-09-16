@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat-box" class="chat-box">
+            <!-- Welcome message added here -->
+            <div class="bot-message">
+                Bot: Hello! How can I assist you in finding the perfect item today? Whether you're searching for a book, restaurant, or product, I'm here to help you make the best choice.
+            </div>
+        </div>
+        <input type="text" id="user-input" placeholder="Type your message here..." autofocus>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+
+            if (userInput.trim() === '') {
+                alert('Please enter a message.');
+                return;
+            }
+
+            // Add the user's message to the chat box
+            const chatBox = document.getElementById('chat-box');
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'user-message';
+            userMessageElement.innerText = 'You: ' + userInput;
+            chatBox.appendChild(userMessageElement);
+
+            // Send the message to the server
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Add the bot's response to the chat box
+                const botMessageElement = document.createElement('div');
+                botMessageElement.className = 'bot-message';
+                botMessageElement.innerText = 'Bot: ' + data.response;
+                chatBox.appendChild(botMessageElement);
+
+                // Clear the input field
+                document.getElementById('user-input').value = '';
+
+                // Scroll the chat box to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
